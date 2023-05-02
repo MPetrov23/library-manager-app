@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:xmls="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <base href="/">
+        <link rel="stylesheet"  type="text/css" href="css/styles.css">
+    </base>
+</head>
+
+<body>
+
+<div class="topnav" id="myNav">
+    <div class="topnav-centered">
+        <a><h1>Bookstore 23</h1></a>
+    </div>
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/listUsers}">Users</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/listOrders}">Orders</a>
+    <div class="topnav-right">
+
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Log in</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log out</a>
+        <button class="darkModeButton" id="darkModeButton">Dark</button>
+    </div>
+</div>
+
+
+<div class="center" >
+    <h1>Books</h1>
+</div>
+
+<div th:if="${param.success}">
+    <div class="center">
+        Successfully ordered!
+    </div>
+</div>
+
+
+    <div>
+        <div class="center">
+            <a class="buttons" sec:authorize="hasRole('ADMIN')" th:href="@{/addNewBook}">Add Book</a>
+        </div>
+
+
+        <table class="tables">
+            <thead >
+             <tr>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <th>ID</th>
+                </div>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Price</th>
+                <th>Actions</th>
+             </tr>
+            </thead >
+
+            <tbody>
+            <tr th:each="book : ${books}">
+                <div sec:authorize="hasRole('ADMIN')">
+                    <td th:text="${book.id}">id</td>
+                </div>
+                <td th:text="${book.title}">title</td>
+                <td th:text="${book.author}">author</td>
+                <td th:text="${book.genre}">genre</td>
+                <td th:text="${book.price}">price</td>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <td>
+                        <a th:href="@{'/editBook/'+${book.id}}">Edit</a>
+                        <a th:href="@{'/deleteBook/'+${book.id}}">Delete</a>
+                    </td>
+                </div>
+                <div sec:authorize="hasRole('USER')">
+                    <td>
+                        <a th:href="@{'/orderBook/'+${book.id}}">Order</a>
+                    </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+<script src="scripts/scripts.js"></script>
+</body>
+
+</html>

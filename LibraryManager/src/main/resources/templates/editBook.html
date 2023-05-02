@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http:..www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Edit book</title>
+  <base href="/">
+  <link rel="stylesheet"  type="text/css" href="css/styles.css">
+  </base>
+</head>
+
+<body>
+
+<div class="topnav "id="myNav">
+  <div class="topnav-centered">
+    <a><h1>Bookstore 23</h1></a>
+  </div>
+  <a th:href="@{/}">Home</a>
+  <a sec:authorize="hasRole('ADMIN')" th:href="@{/listUsers}">List All Users</a>
+  <div class="topnav-right">
+    <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Log in</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log out</a>
+    <button class="darkModeButton" id="darkModeButton">Dark</button>
+  </div>
+</div>
+
+<div class="center" >
+  <h1>Edit Book</h1>
+</div>
+
+      <div class="container">
+        <form method="post" role="form" th:action="@{/saveEditBook}" th:object="${book}">
+
+        <div class="row">
+          <div>
+            <input  id="id" name="id" th:field="*{id}" type="hidden"/>
+          </div>
+        </div>
+
+          <div class="row">
+            <div class="col-25"><label >Title</label></div>
+            <div class="col-75"><input id="title" name="title" placeholder="Enter title" th:field="*{title}" type="text"/></div>
+            <p th:errors = "*{title}"  th:if="${#fields.hasErrors('title')}"></p>
+          </div>
+
+          <div class="row">
+            <div class="col-25"><label>Author</label></div>
+            <div class="col-75"><input id="author" name="author" placeholder="Enter author" th:field="*{author}" type="text"/></div>
+            <p th:errors = "*{author}" th:if="${#fields.hasErrors('author')}"></p>
+          </div>
+
+          <div class="row">
+            <div class="col-25"><label>Genre</label></div>
+            <div class="col-75"><input id="genre" name="genre" placeholder="Enter genre" th:field="*{genre}" type="text"/></div>
+            <p th:errors = "*{genre}" th:if="${#fields.hasErrors('genre')}"></p>
+          </div>
+
+          <div class="row">
+            <div class="col-25"><label>Price</label></div>
+            <div class="col-75"><input id="price" name="price" placeholder="Enter price" th:field="*{price}" type="text"/></div>
+            <p th:errors = "*{price}" th:if="${#fields.hasErrors('price')}"></p>
+          </div>
+
+          <div class="row">
+            <div class="center">
+              <input type="submit" value="Save book">
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+<script src="scripts/scripts.js"></script>
+</body>
+</html>

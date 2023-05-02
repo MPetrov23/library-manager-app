@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: library.LibraryManager.UserRepositoryTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 5.799 s <<< FAILURE! - in library.LibraryManager.UserRepositoryTest
+testCreateUser  Time elapsed: 0.066 s  <<< ERROR!
+org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; constraint [user.UK_ob8kqyqqgmefl0aco34akdtpe]
+	at library.LibraryManager.UserRepositoryTest.testCreateUser(UserRepositoryTest.java:36)
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
+	at library.LibraryManager.UserRepositoryTest.testCreateUser(UserRepositoryTest.java:36)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'pepi25' for key 'user.UK_ob8kqyqqgmefl0aco34akdtpe'
+	at library.LibraryManager.UserRepositoryTest.testCreateUser(UserRepositoryTest.java:36)
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <base href="/">
+     <link rel="stylesheet"  type="text/css" href="css/styles.css">
+    </base>
+</head>
+<body>
+
+<div class="topnav "id="myNav">
+    <div class="topnav-centered">
+        <a><h1>Bookstore 23</h1></a>
+    </div>
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/listUsers}">List All Users</a>
+    <div class="topnav-right">
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Register</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Log in</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log out</a>
+        <button class="darkModeButton" id="darkModeButton">Dark</button>
+    </div>
+</div>
+
+<div class="center" >
+    <h1>Register</h1>
+</div>
+
+<div th:if="${param.success}">
+    <div class="center">
+        You have successfully registered to our app!
+    </div>
+</div>
+
+        <div class="container">
+
+                <div th:if="${param.success}">
+                    <div class="center">
+                    You have successfully registered to our app!
+                    </div>
+                </div>
+
+            <div>
+                <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
+
+                    <div class="row">
+                        <div class="col-25"><label >Username</label></div>
+                        <div class="col-75"><input id="username" name="username" placeholder="Enter username" th:field="*{username}" type="text"/></div>
+                        <p th:errors = "*{username}" class="text-danger" th:if="${#fields.hasErrors('username')}"></p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25"><label >First Name</label></div>
+                        <div class="col-75"><input id="firstName" name="firstName" placeholder="Enter first name" th:field="*{firstName}" type="text"/></div>
+                        <p th:errors = "*{firstName}" class="text-danger" th:if="${#fields.hasErrors('firstName')}"></p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25"> <label >Last Name</label></div>
+                        <div class="col-75"> <input id="lastName" name="lastName" placeholder="Enter last name" th:field="*{lastName}" type="text"/></div>
+                        <p th:errors = "*{lastName}"  th:if="${#fields.hasErrors('lastName')}"></p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25"> <label >Email</label></div>
+                        <div class="col-75"> <input id="email" name='email' placeholder="Enter email address" th:field="*{email}" type="email"/></div>
+                        <p th:errors = "*{email}" th:if="${#fields.hasErrors('email')}"></p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25"> <label >Password</label></div>
+                        <div class="col-75"> <input id="password" name="password" placeholder="Enter password" th:field="*{password}" type="password"/></div>
+                        <p th:errors = "*{password}" class="text-danger" th:if="${#fields.hasErrors('password')}"></p>
+                    </div>
+                    <div class="row">
+                        <div class="center">
+                            <input type="submit" value="Register">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25"><span> Already registered?</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25"> <a class="buttons" th:href="@{/login}">Log in</a></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<script src="scripts/scripts.js"></script>
+</body>
+</html>
