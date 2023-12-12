@@ -1,14 +1,35 @@
-# library-manager-app
-Spring Boot App
+# Library Manager
 
-The Spring Boot app is built using Java, with the Spring Boot framework providing a convenient way to create the app quickly and easily. Here are some of the key features and technologies used:
+Library Manager is a Spring Boot application that provides a platform for managing library.
+User can choose from available books and order them. Receive confirmation email after order.
+Admin can see all the books ,users and orders. Admin can add or remove books and orders, ban users.
 
-Spring Security: This is a powerful security framework that allows the app to implement secure authentication and authorization for users. Spring Security can be used to secure the endpoints of the application, ensuring that only authorized users can access certain parts of the app.
+## Prerequisites
 
-Spring Data JPA: This is a powerful data access framework that makes it easy to work with databases in Spring Boot apps. Spring Data JPA can be used to connect to a database, define data models, and interact with data using standard CRUD (Create, Read, Update, Delete) operations.
+- Java 17
+- Maven 3.x
 
-Thymeleaf: This is a popular templating engine for building web applications in Spring Boot. Thymeleaf provides a convenient way to build dynamic, data-driven web pages that can be easily customized using HTML and CSS.
+## Dependencies
 
-Spring Boot Mail: This is a library that provides easy integration with email functionality. This library can be used to send emails to users upon successful order completion, providing them with an email confirmation.
+- Spring Boot 3.0.2
+- Spring Boot Starter Data JPA
+- Spring Boot Starter Thymeleaf
+- Spring Boot Starter Web
+- Spring Boot Starter Validation
+- MySQL Connector/J
+- Lombok
+- Spring Boot Starter Test (for testing)
+- Spring Boot DevTools
+- Spring Boot Starter Security
+- Thymeleaf Extras Spring Security 6
+- Spring Boot Starter Mail
 
-Overall, the Spring Boot app would provide a convenient and secure way for customers to purchase books online, while also providing an efficient system for bookstore administrators to manage inventory and orders. The use of Java, Spring Boot, and related technologies would allow for efficient development and deployment of the application, while providing robust security and scalability features.
+## Configuration
+
+- Database configuration is set up in `application.properties`.
+- Spring Security configuration is provided in the application.
+
+## License
+
+This project is licensed under the MIT License.
+
