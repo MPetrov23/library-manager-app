@@ -11,12 +11,14 @@ public interface BookService {
 
     Book findBookById(Long id);
 
+    BookDTO findBookDTOById(Long id);
+
     Book findBookByTitle(String title);
 
     List<BookDTO> findAllBooks();
 
     void deleteBook(Long id);
 
-    boolean existsUsername(String username);
+    boolean existsTitle(String title);
 
 }

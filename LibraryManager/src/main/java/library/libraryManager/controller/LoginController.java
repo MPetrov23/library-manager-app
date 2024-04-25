@@ -27,9 +27,9 @@ public class LoginController {
 
 	@GetMapping("/register")
 	public ModelAndView register(Model model) {
-		ModelAndView modelAndView = new ModelAndView("register");
-		modelAndView.addObject("user", new UserDTO());
-	return modelAndView;
+		return new ModelAndView("register",
+				"user",
+				new UserDTO());
 	}
 
 	@PostMapping("/registrationHandler")
@@ -38,9 +38,13 @@ public class LoginController {
 											RedirectAttributes redirectAttributes) {
 
 		if (userService.existsUserEmail(userDTO.getEmail())) {
-			result.rejectValue("email", null, "This email is already in use!");}
+			result.rejectValue("email",
+					"duplicate.email",
+					"This email is already in use!");}
 		if (userService.existsUsername(userDTO.getUsername())) {
-			result.rejectValue("username", null, "This username is already in use!");}
+			result.rejectValue("username",
+					"duplicate.username",
+					"This username is already in use!");}
 		if (result.hasErrors()) {
 			return new ModelAndView("register", "user", userDTO);
 		}

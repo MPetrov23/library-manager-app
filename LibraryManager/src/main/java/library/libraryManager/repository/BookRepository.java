@@ -8,4 +8,6 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     Book findByTitle(String title);
 
     boolean existsByTitle(String title);
+
+    Book findBookById(long id);
 }

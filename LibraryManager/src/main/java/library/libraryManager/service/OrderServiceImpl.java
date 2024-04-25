@@ -1,15 +1,12 @@
 package library.libraryManager.service;
 
-import library.libraryManager.dto.BookDTO;
-import library.libraryManager.entity.Book;
 import library.libraryManager.entity.Order;
-import library.libraryManager.repository.BookRepository;
 import library.libraryManager.repository.OrderRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -32,14 +29,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findOrderById(Long id) {
-        return orderRepository.findById(id).get();
+        return orderRepository.findOrderById(id);
     }
 
     @Override
     public List<Order> findAllOrders() {
-        List<Order> orders=orderRepository.findAll();
-        return orders.stream().collect(Collectors.toList());
-
+        return orderRepository.findAll();
     }
 
 }

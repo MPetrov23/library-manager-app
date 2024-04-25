@@ -3,18 +3,18 @@ package library.libraryManager.controller;
 import jakarta.validation.Valid;
 import library.libraryManager.dto.BookDTO;
 import library.libraryManager.dto.OrderDTO;
-import library.libraryManager.entity.Book;
 import library.libraryManager.service.BookService;
-import org.springframework.ui.Model;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
+@RestController
+@RequiredArgsConstructor
 public class BookController {
+
     private BookService bookService;
 
     @GetMapping("/listBooks")
@@ -32,41 +32,46 @@ public class BookController {
     }
 
     @PostMapping("/saveNewBook")
-    public String addBook(@Valid @ModelAttribute("book") BookDTO bookDTO, BindingResult result, Model model) {
+    public ModelAndView addBook(@Valid @ModelAttribute("book") BookDTO bookDTO, BindingResult result) {
 
-        Book existingBook = bookService.findBookByTitle(bookDTO.getTitle());
-
-        if (existingBook != null && existingBook.getTitle() != null && !existingBook.getTitle().isEmpty()) {
-            result.rejectValue("title", null, "There is a book with the same title");}
+        if (bookService.existsTitle(bookDTO.getTitle())) {
+            result.rejectValue("title",
+                    "duplicate.title",
+                    "There is a book with the same title");}
         if(bookDTO.getPrice()<=0){
-            result.rejectValue("price",null,"Price can't be 0 or less");}
+            result.rejectValue("price",
+                    "invalid.price" ,
+                    "Price can't be 0 or less");}
         if (result.hasErrors()) {
-            model.addAttribute("book", bookDTO);
-            return "addBook";}
+            return new ModelAndView("addBook",
+                    "book",
+                    bookDTO);
+        }
 
         bookService.saveBook(bookDTO);
-        return "redirect:/listBooks";
+        return new ModelAndView("redirect:/listBooks");
     }
 
     @GetMapping("/editBook/{id}")
-    public String showEditBookForm(@PathVariable(value="id")Long id, Model model) {
-        BookDTO book=mapBook.convertEntityToDTO(bookService.findBookById(id));
-        model.addAttribute("book",book);
-        return "editBook";
+    public ModelAndView showEditBookForm(@PathVariable(value="id")Long id) {
+        return new ModelAndView("editBook",
+                "book",
+                bookService.findBookDTOById(id));
     }
 
     @PostMapping("/saveEditBook")
-    public String saveEdit(@Valid  @ModelAttribute("book") BookDTO bookDTO, BindingResult result, Model model) {
-        Book existingBook = bookService.findBookByTitle(bookDTO.getTitle());
+    public ModelAndView saveEdit(@ModelAttribute("book") BookDTO bookDTO, BindingResult result) {
 
         if(bookDTO.getPrice()<=0){
-            result.rejectValue("price",null,"Price can't be 0 or less");}
+            result.rejectValue("price",
+                    "invalid.price",
+                    "Price can't be 0 or less");}
         if (result.hasErrors()) {
-            model.addAttribute("book", bookDTO);
-            return "/editBook";}
+            return new ModelAndView("/editBook", "book", bookDTO);
+            }
 
         bookService.saveBook(bookDTO);
-        return "redirect:/listBooks";
+        return new ModelAndView("redirect:/listBooks");
     }
 
     @GetMapping(value="/deleteBook/{id}")
@@ -76,12 +81,13 @@ public class BookController {
     }
 
     @GetMapping(value = "/orderBook/{id}")
-    public String order(@PathVariable Long id, Model model){
-        Book book=bookService.findBookById(id);
-        model.addAttribute("book", book);
+    public ModelAndView order(@PathVariable Long id){
+        ModelAndView modelAndView = new ModelAndView("confirmOrder");
 
-        OrderDTO orderDTO=new OrderDTO();
-        model.addAttribute("order",orderDTO);
-        return "confirmOrder";
+        modelAndView.addObject("book", bookService.findBookById(id));
+        modelAndView.addObject("order", new OrderDTO());
+
+        return modelAndView;
     }
+
 }

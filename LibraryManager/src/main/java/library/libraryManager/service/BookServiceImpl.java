@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private BookMapper mapBook;
-    private BookRepository bookRepository;
+    private final BookMapper mapBook;
+    private final BookRepository bookRepository;
 
     public BookServiceImpl( BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -27,7 +27,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findBookById(Long id) {
-        return bookRepository.findById(id).get();
+        return bookRepository.findBookById(id);
+    }
+
+    @Override
+    public BookDTO findBookDTOById(Long id) {
+        return mapBook.convertEntityToDTO(bookRepository.findBookById(id));
     }
 
     @Override
@@ -41,8 +46,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean existsUsername(String username) {
-        return false;
+    public boolean existsTitle(String title) {
+        return bookRepository.existsByTitle(title);
     }
 
     @Override

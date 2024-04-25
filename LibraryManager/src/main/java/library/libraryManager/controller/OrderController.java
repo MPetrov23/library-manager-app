@@ -1,41 +1,55 @@
 package library.libraryManager.controller;
 
-import jakarta.validation.Valid;
 import library.libraryManager.dto.OrderDTO;
+import library.libraryManager.email.EmailSenderService;
 import library.libraryManager.entity.Book;
 import library.libraryManager.entity.Order;
 import library.libraryManager.entity.User;
+import library.libraryManager.service.BookService;
+import library.libraryManager.service.OrderService;
+import library.libraryManager.service.UserService;
+import library.libraryManager.validation.DataValidation;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.List;
 
+@RestController
+@RequiredArgsConstructor
 public class OrderController {
 
-
+    private OrderService orderService;
+    private BookService bookService;
+    private UserService userService;
+    private EmailSenderService mailSenderService;
 
     @PostMapping(value="/confirmOrder/{id}")
-    public String confirmOrder(@PathVariable Long id, @Valid @ModelAttribute("order") OrderDTO orderDTO, BindingResult result, Model model) {
+    public ModelAndView submitOrder(@PathVariable Long id,
+                              @ModelAttribute("order") OrderDTO orderDTO,
+                              BindingResult result,
+                              RedirectAttributes redirectAttributes) {
+
         Book book=bookService.findBookById(id);
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User receiver=userService.findUserByUsername(user.getUsername());
+        User receiver=userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
-
-        if (!validation.isValidPhoneNumber(orderDTO.getPhoneNumber())) {
+        if (!DataValidation.isValidPhoneNumber(orderDTO.getPhoneNumber())) {
             result.rejectValue("phoneNumber", null, "Invalid phone number!");}
         if (result.hasErrors()) {
-            model.addAttribute("book", book);
-            return "confirmOrder";}
 
-        Order order=new Order(
-                user.getUsername(),
+            return new ModelAndView("confirmOrder",
+                    "book",
+                    book);
+        }
+
+        Order order = new Order(
+                receiver.getUsername(),
                 book.getTitle(),
                 LocalDate.now(),
                 orderDTO.getAddress(),
@@ -44,7 +58,7 @@ public class OrderController {
 
         orderService.saveOrder(order);
 
-        emailSender.sendEmail(
+        mailSenderService.sendEmail(
                 receiver.getEmail(),
                 receiver.getName(),
                 book.getTitle(),
@@ -54,23 +68,25 @@ public class OrderController {
                 String.valueOf(order.getDate()),
                 String.valueOf(order.getId())
         );
-
-        return "redirect:/listBooks?success";
-
+        redirectAttributes.addAttribute("success",true);
+        return new ModelAndView("redirect:/listBooks");
     }
+
     @GetMapping("/listOrders")
-    public String listOrders(Model model) {
-        List<Order> orders = orderService.findAllOrders();
-        model.addAttribute("orders", orders);
-        return "listOrders";
+    public ModelAndView listOrders(Model model) {
+        return new ModelAndView("listOrders",
+                "orders",
+                orderService.findAllOrders());
     }
 
     @GetMapping("/deleteOrder/{id}")
-    public String deleteOrder(@PathVariable Long id){
+    public ModelAndView deleteOrder(@PathVariable Long id,
+                              RedirectAttributes redirectAttributes){
+
         orderService.deleteOrderById(id);
-        return "redirect:/listOrders?success";
 
+        redirectAttributes.addAttribute("success",true);
+        return new ModelAndView("listOrders");
     }
-
 
 }
