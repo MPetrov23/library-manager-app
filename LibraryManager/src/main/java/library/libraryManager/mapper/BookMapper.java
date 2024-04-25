@@ -4,7 +4,7 @@ import library.libraryManager.dto.BookDTO;
 import library.libraryManager.entity.Book;
 
 public class BookMapper {
-    public static BookDTO convertEntityToDTO(Book book){
+    public BookDTO convertEntityToDTO(Book book){
         BookDTO bookDTO =new BookDTO(
                 book.getId(),
                 book.getTitle(),
@@ -14,7 +14,8 @@ public class BookMapper {
         );
         return bookDTO;
     }
-    public static Book convertDTOtoEntity(BookDTO bookDTO){
+
+    public Book convertDTOtoEntity(BookDTO bookDTO){
         Book book=new Book(
                 bookDTO.getId(),
                 bookDTO.getTitle(),

@@ -11,21 +11,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-
     }
 
     @Override
     public void saveUser(UserDTO userDto) {
         User user = UserMapper.convertDtoToEntity(userDto);
 
-        user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
@@ -51,6 +48,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsUserEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 

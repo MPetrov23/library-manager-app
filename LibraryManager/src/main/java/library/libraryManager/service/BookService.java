@@ -8,13 +8,15 @@ import java.util.List;
 public interface BookService {
 
     void saveBook(BookDTO bookDTO);
-    void updateBook(Book book);
+
     Book findBookById(Long id);
+
     Book findBookByTitle(String title);
+
     List<BookDTO> findAllBooks();
+
     void deleteBook(Long id);
 
-
-
+    boolean existsUsername(String username);
 
 }

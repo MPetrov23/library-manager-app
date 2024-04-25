@@ -30,19 +30,13 @@
     <h1>Log in</h1>
 </div>
 
-        <div th:if="${param.success}">
-             <div class="center">
-                Successfully registered!
-            </div>
-        </div>
-
           <div th:if="${param.error}">
         <div class="center">Invalid Username or Password!!!</div>
           </div>
 
 
         <div class="container">
-          <form method="post" role="form" th:action="@{/loginProcessing}">
+              <form method="post" role="form" th:action="@{/loginProcessing}">
 
             <div class="row">
                 <div class="col-25"> <label >Username</label></div>
